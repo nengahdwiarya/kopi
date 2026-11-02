@@ -1,4 +1,3 @@
-// Database 22 Menu
 const menuItems = [
     { id: 1, name: "Buttercream Latte", category: "coffee", price: 29000, image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=500&q=80", description: "Lembutnya buttercream dipadu dengan espresso khas." },
     { id: 2, name: "Buttercream Tiramisu", category: "coffee", price: 33000, image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=500&q=80", description: "Sentuhan rasa tiramisu kaya aroma." },
@@ -29,7 +28,7 @@ let currentSlide = 0;
 let selectedStar = 0;
 let discountPercent = 0;
 
-// Inisialisasi Database Lokal (LocalStorage) jika belum ada
+// Inisialisasi Database Ulasan Awal
 if (!localStorage.getItem('reviews')) {
     localStorage.setItem('reviews', JSON.stringify([
         { name: "Devi Alfilovita", text: "Kopi Senja Bojongsari is one of the best merchants! Pelayanan cepat dan sangat memuaskan.", stars: 5 },
@@ -70,20 +69,25 @@ function switchPage(pageId) {
     }
 }
 
-// Render Slider Testimoni dari Database
+// Render Slider Testimoni secara Dinamis (Mendukung Banyak Slide)
 function renderReviews() {
     const slider = document.getElementById('testimonialSlider');
     const dotsContainer = document.getElementById('sliderDots');
+    const totalCountEl = document.getElementById('totalReviewsCount');
     if (!slider) return;
 
     const reviews = JSON.parse(localStorage.getItem('reviews'));
+    if (totalCountEl) totalCountEl.textContent = reviews.length;
+
     slider.innerHTML = '';
     dotsContainer.innerHTML = '';
 
     reviews.forEach((rev, index) => {
         const starHTML = '<i class="fa-solid fa-star" style="color:#ffc107;"></i>'.repeat(rev.stars);
+        
+        // Buat kartu slide testimoni
         const card = document.createElement('div');
-        card.className = `testi-card ${index === 0 ? 'active' : ''}`;
+        card.className = `testi-card ${index === currentSlide ? 'active' : ''}`;
         card.innerHTML = `
             <i class="fa-solid fa-quote-left quote-icon"></i>
             <div style="margin-bottom:5px;">${starHTML}</div>
@@ -95,8 +99,9 @@ function renderReviews() {
         `;
         slider.appendChild(card);
 
+        // Buat titik navigasi (dot) otomatis sebanyak jumlah ulasan
         const dot = document.createElement('span');
-        dot.className = `dot ${index === 0 ? 'active' : ''}`;
+        dot.className = `dot ${index === currentSlide ? 'active' : ''}`;
         dot.onclick = () => goToSlide(index);
         dotsContainer.appendChild(dot);
     });
@@ -115,26 +120,47 @@ function showSlide(index) {
     dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
 }
 
-function goToSlide(index) { currentSlide = index; showSlide(index); }
+function goToSlide(index) { 
+    currentSlide = index; 
+    showSlide(currentSlide); 
+}
 
-// Kirim Ulasan Rating Baru ke Database
+// Kirim Ulasan Rating Baru & Langsung Masuk ke Slider Multi-Slide
 function submitReview() {
-    const name = document.getElementById('reviewerName').value;
-    const text = document.getElementById('userReviewText').value;
+    const name = document.getElementById('reviewerName').value.trim();
+    const text = document.getElementById('userReviewText').value.trim();
 
     if (selectedStar === 0) return alert('Silakan pilih rating bintang terlebih dahulu!');
-    if (!name.trim() || !text.trim()) return alert('Silakan isi nama dan ulasan Anda!');
+    if (!name || !text) return alert('Silakan isi nama dan ulasan Anda!');
 
     const reviews = JSON.parse(localStorage.getItem('reviews'));
     reviews.push({ name, text, stars: selectedStar });
     localStorage.setItem('reviews', JSON.stringify(reviews));
 
-    alert('Terima kasih! Ulasan Anda berhasil ditambahkan ke sistem.');
+    alert('Terima kasih! Ulasan & rating Anda berhasil ditambahkan ke slide testimoni.');
     document.getElementById('reviewerName').value = '';
     document.getElementById('userReviewText').value = '';
     selectedStar = 0;
     updateStarUI(0);
+    
+    // Refresh slider ke ulasan terbaru yang baru saja dikirim
+    currentSlide = reviews.length - 1;
     renderReviews();
+    showSlide(currentSlide);
+}
+
+// Helper Update Bintang Input Form
+function updateStarUI(rating) {
+    const stars = document.querySelectorAll('#starRating i');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.remove('fa-regular');
+            star.classList.add('fa-solid');
+        } else {
+            star.classList.remove('fa-solid');
+            star.classList.add('fa-regular');
+        }
+    });
 }
 
 // Render Menu 22 Item
@@ -236,7 +262,7 @@ function updateCartUI() {
     cartTotalAmount.textContent = formatRupiah(totalSum);
 }
 
-// Panel Admin (Simpan & Kelola Pesanan)
+// Panel Admin
 function renderAdminOrders() {
     const tbody = document.getElementById('adminOrderList');
     if (!tbody) return;
@@ -297,20 +323,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Rating Bintang Interaktif
+    // Rating Bintang Interaktif Form
     document.querySelectorAll('#starRating i').forEach(star => {
         star.addEventListener('click', function() {
             selectedStar = parseInt(this.getAttribute('data-value'));
-            document.querySelectorAll('#starRating i').forEach((s, index) => {
-                if (index < selectedStar) {
-                    s.classList.remove('fa-regular'); s.classList.add('fa-solid');
-                } else {
-                    s.classList.remove('fa-solid'); s.classList.add('fa-regular');
-                }
-            });
+            updateStarUI(selectedStar);
         });
     });
 
+    // Tombol Geser Slider Testimoni
     document.getElementById('prevSlide')?.addEventListener('click', () => showSlide(currentSlide - 1));
     document.getElementById('nextSlide')?.addEventListener('click', () => showSlide(currentSlide + 1));
 
@@ -328,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.target.reset();
     });
 
-    // Checkout Langsung ke WhatsApp & Simpan ke Database Pesanan Admin
+    // Checkout Langsung ke WhatsApp & Simpan ke Admin
     document.getElementById('checkoutWaBtn')?.addEventListener('click', () => {
         if (cart.length === 0) return alert('Keranjang masih kosong!');
         const name = document.getElementById('buyerName').value.trim();
@@ -342,7 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let itemsSummary = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
 
-        // Simpan ke database lokal admin
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         const newOrder = {
             id: Math.floor(1000 + Math.random() * 9000),
@@ -355,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
         orders.push(newOrder);
         localStorage.setItem('orders', JSON.stringify(orders));
 
-        // Format Pesan ke WhatsApp Pemilik Kedai (0881025467022)
         const waNumber = "62881025467022";
         const message = `Halo Kopi Senja Bojongsari, saya ingin memesan:%0A%0A*Nama:* ${name}%0A*No HP/WA:* ${phone}%0A*Pesanan:* ${itemsSummary}%0A*Total Harga:* ${formatRupiah(totalSum)}%0A*Metode Pembayaran:* ${payment}%0A*Diskon Voucher:* ${discountPercent}%0A%0AMohon segera diproses ya!`;
 
@@ -364,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartUI();
         cartModal.classList.remove('active');
 
-        // Buka WhatsApp Otomatis
         window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
     });
 });
