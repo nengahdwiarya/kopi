@@ -26,21 +26,21 @@
     <!-- Header / Navbar -->
     <header class="header">
         <div class="container navbar">
-            <a href="#" class="logo" onclick="switchPage('home')">
+            <a href="#" class="logo" data-page="home">
                 <i class="fa-solid fa-mug-hot"></i> Kopi<span>Senja</span>
             </a>
             
             <nav class="nav-links" id="navLinks">
-                <a href="#" onclick="switchPage('home')" class="nav-item active" data-page="home">Beranda</a>
-                <a href="#" onclick="switchPage('tentang')" class="nav-item" data-page="tentang">Tentang</a>
-                <a href="#" onclick="switchPage('menu')" class="nav-item" data-page="menu">Menu</a>
-                <a href="#" onclick="switchPage('toko')" class="nav-item" data-page="toko">Toko</a>
-                <a href="#" onclick="switchPage('investor')" class="nav-item" data-page="investor">Investor</a>
-                <a href="#" onclick="switchPage('tatakelola')" class="nav-item" data-page="tatakelola">Tata Kelola</a>
-                <a href="#" onclick="switchPage('kolaborasi')" class="nav-item" data-page="kolaborasi">Kolaborasi</a>
-                <a href="#" onclick="switchPage('berita')" class="nav-item" data-page="berita">Berita</a>
-                <a href="#" onclick="switchPage('karir')" class="nav-item" data-page="karir">Karir</a>
-                <a href="#" onclick="switchPage('kontak')" class="nav-item" data-page="kontak">Kontak</a>
+                <a href="#" class="nav-item active" data-page="home">Beranda</a>
+                <a href="#" class="nav-item" data-page="tentang">Tentang</a>
+                <a href="#" class="nav-item" data-page="menu">Menu</a>
+                <a href="#" class="nav-item" data-page="toko">Toko</a>
+                <a href="#" class="nav-item" data-page="investor">Investor</a>
+                <a href="#" class="nav-item" data-page="tatakelola">Tata Kelola</a>
+                <a href="#" class="nav-item" data-page="kolaborasi">Kolaborasi</a>
+                <a href="#" class="nav-item" data-page="berita">Berita</a>
+                <a href="#" class="nav-item" data-page="karir">Karir</a>
+                <a href="#" class="nav-item" data-page="kontak">Kontak</a>
             </nav>
 
             <div class="nav-actions">
@@ -57,7 +57,6 @@
 
     <!-- ================= PAGE 1: BERANDA ================= -->
     <main id="page-home" class="page-content active">
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-overlay"></div>
             <div class="container hero-content">
@@ -185,7 +184,7 @@
         </div>
 
         <div class="menu-grid" id="menuGrid">
-            <!-- Diisi secara dinamis melalui JS (22 Menu) -->
+            <!-- Diisi secara dinamis via JS -->
         </div>
     </main>
 
@@ -323,7 +322,7 @@
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <a href="#" class="logo" style="color:#fff;">
+                <a href="#" class="logo" style="color:#fff;" data-page="home">
                     <i class="fa-solid fa-mug-hot"></i> Kopi<span>Senja</span>
                 </a>
                 <p>From Indonesia to the world.</p>
