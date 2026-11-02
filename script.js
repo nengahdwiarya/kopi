@@ -1,4 +1,4 @@
-// Data 22 Menu Lengkap
+// Database 22 Menu
 const menuItems = [
     { id: 1, name: "Buttercream Latte", category: "coffee", price: 29000, image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=500&q=80", description: "Lembutnya buttercream dipadu dengan espresso khas." },
     { id: 2, name: "Buttercream Tiramisu", category: "coffee", price: 33000, image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=500&q=80", description: "Sentuhan rasa tiramisu kaya aroma." },
@@ -27,12 +27,26 @@ const menuItems = [
 let cart = [];
 let currentSlide = 0;
 let selectedStar = 0;
+let discountPercent = 0;
+
+// Inisialisasi Database Lokal (LocalStorage) jika belum ada
+if (!localStorage.getItem('reviews')) {
+    localStorage.setItem('reviews', JSON.stringify([
+        { name: "Devi Alfilovita", text: "Kopi Senja Bojongsari is one of the best merchants! Pelayanan cepat dan sangat memuaskan.", stars: 5 },
+        { name: "Rian Kusuma", text: "Cita rasa kopi lokal kualitas internasional ada di Bojongsari!", stars: 5 },
+        { name: "Siti Rahma", text: "Kopi susu gula arennya juara banget! Dekat dari rumah.", stars: 5 }
+    ]));
+}
+
+if (!localStorage.getItem('orders')) {
+    localStorage.setItem('orders', JSON.stringify([]));
+}
 
 function formatRupiah(amount) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 }
 
-// Fungsi Pindah Halaman Aman
+// Navigasi Pindah Halaman
 function switchPage(pageId) {
     const pages = document.querySelectorAll('.page-content');
     const navItems = document.querySelectorAll('.nav-item');
@@ -41,22 +55,53 @@ function switchPage(pageId) {
     navItems.forEach(item => item.classList.remove('active'));
 
     const activePage = document.getElementById(`page-${pageId}`);
-    if (activePage) {
-        activePage.classList.add('active');
-    }
+    if (activePage) activePage.classList.add('active');
 
     const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-    if (activeNav) {
-        activeNav.classList.add('active');
-    }
+    if (activeNav) activeNav.classList.add('active');
 
     const navLinksEl = document.getElementById('navLinks');
     if (navLinksEl) navLinksEl.classList.remove('active');
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (pageId === 'admin') {
+        renderAdminOrders();
+    }
 }
 
-// Testimonial Slider
+// Render Slider Testimoni dari Database
+function renderReviews() {
+    const slider = document.getElementById('testimonialSlider');
+    const dotsContainer = document.getElementById('sliderDots');
+    if (!slider) return;
+
+    const reviews = JSON.parse(localStorage.getItem('reviews'));
+    slider.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
+    reviews.forEach((rev, index) => {
+        const starHTML = '<i class="fa-solid fa-star" style="color:#ffc107;"></i>'.repeat(rev.stars);
+        const card = document.createElement('div');
+        card.className = `testi-card ${index === 0 ? 'active' : ''}`;
+        card.innerHTML = `
+            <i class="fa-solid fa-quote-left quote-icon"></i>
+            <div style="margin-bottom:5px;">${starHTML}</div>
+            <p class="testi-text">"${rev.text}"</p>
+            <div class="testi-author">
+                <strong>${rev.name}</strong>
+                <span>Warga Bojongsari, Depok</span>
+            </div>
+        `;
+        slider.appendChild(card);
+
+        const dot = document.createElement('span');
+        dot.className = `dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+}
+
 function showSlide(index) {
     const slides = document.querySelectorAll('.testi-card');
     const dots = document.querySelectorAll('.dot');
@@ -66,20 +111,33 @@ function showSlide(index) {
     else if (index < 0) currentSlide = slides.length - 1;
     else currentSlide = index;
 
-    slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === currentSlide);
-    });
-
-    dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentSlide);
-    });
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
 }
 
-function goToSlide(index) {
-    showSlide(index);
+function goToSlide(index) { currentSlide = index; showSlide(index); }
+
+// Kirim Ulasan Rating Baru ke Database
+function submitReview() {
+    const name = document.getElementById('reviewerName').value;
+    const text = document.getElementById('userReviewText').value;
+
+    if (selectedStar === 0) return alert('Silakan pilih rating bintang terlebih dahulu!');
+    if (!name.trim() || !text.trim()) return alert('Silakan isi nama dan ulasan Anda!');
+
+    const reviews = JSON.parse(localStorage.getItem('reviews'));
+    reviews.push({ name, text, stars: selectedStar });
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+
+    alert('Terima kasih! Ulasan Anda berhasil ditambahkan ke sistem.');
+    document.getElementById('reviewerName').value = '';
+    document.getElementById('userReviewText').value = '';
+    selectedStar = 0;
+    updateStarUI(0);
+    renderReviews();
 }
 
-// Render Menu
+// Render Menu 22 Item
 function renderMenu(filter = 'all') {
     const menuGrid = document.getElementById('menuGrid');
     if (!menuGrid) return;
@@ -107,7 +165,28 @@ function renderMenu(filter = 'all') {
     });
 }
 
-// Cart Logic
+// Logika Voucher
+function applyVoucher() {
+    const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
+    const msg = document.getElementById('voucherMessage');
+
+    if (code === 'KOPIZENJA' || code === 'BOJONGSARI') {
+        discountPercent = 15;
+        msg.textContent = 'Voucher Berhasil! Diskon 15% diterapkan.';
+    } else if (code === 'SENJADAMAI') {
+        discountPercent = 10;
+        msg.textContent = 'Voucher Berhasil! Diskon 10% diterapkan.';
+    } else {
+        discountPercent = 0;
+        msg.textContent = 'Kode voucher tidak valid!';
+        msg.style.color = 'red';
+        return;
+    }
+    msg.style.color = 'green';
+    updateCartUI();
+}
+
+// Cart & WhatsApp Order Logic
 function addToCart(id) {
     const product = menuItems.find(p => p.id === id);
     const exist = cart.find(c => c.id === id);
@@ -150,24 +229,66 @@ function updateCartUI() {
         });
     }
 
-    const totalSum = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+    let totalSum = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+    if (discountPercent > 0) {
+        totalSum = totalSum - (totalSum * discountPercent / 100);
+    }
     cartTotalAmount.textContent = formatRupiah(totalSum);
 }
 
-// Event Listeners setelah DOM siap
+// Panel Admin (Simpan & Kelola Pesanan)
+function renderAdminOrders() {
+    const tbody = document.getElementById('adminOrderList');
+    if (!tbody) return;
+
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    tbody.innerHTML = '';
+
+    if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#777;">Belum ada pesanan masuk.</td></tr>`;
+        return;
+    }
+
+    orders.forEach((ord, idx) => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #ddd';
+        tr.innerHTML = `
+            <td style="padding:10px;">#${ord.id}</td>
+            <td style="padding:10px;">${ord.name}<br><small>${ord.phone}</small></td>
+            <td style="padding:10px;">${ord.items}</td>
+            <td style="padding:10px;">${formatRupiah(ord.total)}</td>
+            <td style="padding:10px;">${ord.payment}</td>
+            <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#d4edda':ord.status==='Dibatalkan'?'#f8d7da':'#fff3cd'};">${ord.status}</span></td>
+            <td style="padding:10px;">
+                <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Setuju</button>
+                <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Selesai</button>
+                <button onclick="updateOrderStatus(${idx}, 'Dibatalkan')" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Batal</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function updateOrderStatus(index, status) {
+    let orders = JSON.parse(localStorage.getItem('orders'));
+    orders[index].status = status;
+    localStorage.setItem('orders', JSON.stringify(orders));
+    renderAdminOrders();
+    alert(`Status pesanan #${orders[index].id} diubah menjadi: ${status}`);
+}
+
+// Inisialisasi Event
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
+    renderReviews();
 
-    // Navigasi Klik Event
     document.querySelectorAll('[data-page]').forEach(el => {
         el.addEventListener('click', (e) => {
             e.preventDefault();
-            const pageId = el.getAttribute('data-page');
-            switchPage(pageId);
+            switchPage(el.getAttribute('data-page'));
         });
     });
 
-    // Filter Tombol Menu Event
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -180,47 +301,70 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#starRating i').forEach(star => {
         star.addEventListener('click', function() {
             selectedStar = parseInt(this.getAttribute('data-value'));
-            const stars = document.querySelectorAll('#starRating i');
-            stars.forEach((s, index) => {
+            document.querySelectorAll('#starRating i').forEach((s, index) => {
                 if (index < selectedStar) {
-                    s.classList.remove('fa-regular');
-                    s.classList.add('fa-solid');
+                    s.classList.remove('fa-regular'); s.classList.add('fa-solid');
                 } else {
-                    s.classList.remove('fa-solid');
-                    s.classList.add('fa-regular');
+                    s.classList.remove('fa-solid'); s.classList.add('fa-regular');
                 }
             });
         });
     });
 
-    // Slider Listeners
     document.getElementById('prevSlide')?.addEventListener('click', () => showSlide(currentSlide - 1));
     document.getElementById('nextSlide')?.addEventListener('click', () => showSlide(currentSlide + 1));
 
-    // Cart Modal Listeners
     const cartModal = document.getElementById('cartModal');
     document.getElementById('cartBtn')?.addEventListener('click', () => cartModal.classList.add('active'));
     document.getElementById('closeCart')?.addEventListener('click', () => cartModal.classList.remove('active'));
 
-    // Mobile Menu Toggle
     document.getElementById('menuToggle')?.addEventListener('click', () => {
         document.getElementById('navLinks')?.classList.toggle('active');
     });
 
-    // Form Komplain Event
     document.getElementById('complaintForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Komplain/Pesan Anda telah berhasil dikirim ke sekolahmail588@gmail.com dan tim kami akan segera menghubungi nomor 0881025467022.');
+        alert('Komplain/Pesan Anda telah dikirim ke sekolahmail588@gmail.com dan nomor 0881025467022.');
         e.target.reset();
     });
 
-    // Checkout Event
-    document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+    // Checkout Langsung ke WhatsApp & Simpan ke Database Pesanan Admin
+    document.getElementById('checkoutWaBtn')?.addEventListener('click', () => {
         if (cart.length === 0) return alert('Keranjang masih kosong!');
+        const name = document.getElementById('buyerName').value.trim();
+        const phone = document.getElementById('buyerPhone').value.trim();
         const payment = document.getElementById('paymentMethod').value;
-        alert(`Pesanan berhasil dibuat! Silakan selesaikan pembayaran menggunakan ${payment}.`);
+
+        if (!name || !phone) return alert('Silakan masukkan Nama dan Nomor WhatsApp Anda!');
+
+        let totalSum = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+        if (discountPercent > 0) totalSum = totalSum - (totalSum * discountPercent / 100);
+
+        let itemsSummary = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
+
+        // Simpan ke database lokal admin
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        const newOrder = {
+            id: Math.floor(1000 + Math.random() * 9000),
+            name, phone,
+            items: itemsSummary,
+            total: totalSum,
+            payment,
+            status: 'Menunggu Persetujuan'
+        };
+        orders.push(newOrder);
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Format Pesan ke WhatsApp Pemilik Kedai (0881025467022)
+        const waNumber = "62881025467022";
+        const message = `Halo Kopi Senja Bojongsari, saya ingin memesan:%0A%0A*Nama:* ${name}%0A*No HP/WA:* ${phone}%0A*Pesanan:* ${itemsSummary}%0A*Total Harga:* ${formatRupiah(totalSum)}%0A*Metode Pembayaran:* ${payment}%0A*Diskon Voucher:* ${discountPercent}%0A%0AMohon segera diproses ya!`;
+
         cart = [];
+        discountPercent = 0;
         updateCartUI();
         cartModal.classList.remove('active');
+
+        // Buka WhatsApp Otomatis
+        window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
     });
 });
