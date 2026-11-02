@@ -41,7 +41,7 @@
                 <a href="#" class="nav-item" data-page="berita">Berita</a>
                 <a href="#" class="nav-item" data-page="karir">Karir</a>
                 <a href="#" class="nav-item" data-page="kontak">Kontak</a>
-                <a href="#" class="nav-item admin-link" data-page="admin" style="color: #ff9800; font-weight:700;"><i class="fa-solid fa-lock"></i> Admin</a>
+                <a href="#" class="nav-item" data-page="admin" style="color: #ff9800; font-weight:700;"><i class="fa-solid fa-lock"></i> Admin</a>
             </nav>
 
             <div class="nav-actions">
@@ -92,22 +92,23 @@
             </div>
         </section>
 
-        <!-- Testimoni / Rating Slider (Dinamis dari Database Lokal) -->
+        <!-- Testimoni / Multi-Slide Rating Slider Dinamis -->
         <section class="testimonial-section">
             <div class="container">
                 <h2 class="section-title text-center">Testimoni & Rating Pelanggan</h2>
-                <div class="pill-tag">Ulasan Warga Bojongsari</div>
+                <div class="pill-tag">Ulasan Warga Bojongsari (<span id="totalReviewsCount">0</span> Ulasan)</div>
 
                 <div class="testimonial-slider-wrapper">
                     <button class="slider-arrow prev-btn" id="prevSlide"><i class="fa-solid fa-chevron-left"></i></button>
                     
                     <div class="testimonial-slider" id="testimonialSlider">
-                        <!-- Diisi secara dinamis melalui JavaScript (menyimpan ulasan baru) -->
+                        <!-- Slide ulasan akan bertambah otomatis secara dinamis dari database -->
                     </div>
 
                     <button class="slider-arrow next-btn" id="nextSlide"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
 
+                <!-- Indikator Titik Sesuai Jumlah Slide -->
                 <div class="slider-dots" id="sliderDots"></div>
 
                 <!-- Form Beri Rating / Ulasan -->
@@ -152,7 +153,7 @@
         <div class="menu-grid" id="menuGrid"></div>
     </main>
 
-    <!-- ================= PAGE 4: TOKO (Bojongsari Depok) ================= -->
+    <!-- ================= PAGE 4: TOKO ================= -->
     <main id="page-toko" class="page-content container section-page">
         <h1 class="page-title">Lokasi Toko Kami</h1>
         <div class="grid-2">
@@ -250,7 +251,7 @@
         </div>
     </main>
 
-    <!-- ================= PAGE 11: PANEL ADMIN (Persetujuan Pesanan) ================= -->
+    <!-- ================= PAGE 11: PANEL ADMIN ================= -->
     <main id="page-admin" class="page-content container section-page">
         <h1 class="page-title"><i class="fa-solid fa-lock"></i> Panel Admin Pemilik Web</h1>
         <div class="content-box">
@@ -269,9 +270,7 @@
                             <th style="padding: 10px;">Aksi Admin</th>
                         </tr>
                     </thead>
-                    <tbody id="adminOrderList">
-                        <!-- Diisi via JS -->
-                    </tbody>
+                    <tbody id="adminOrderList"></tbody>
                 </table>
             </div>
         </div>
@@ -303,7 +302,7 @@
         </div>
     </footer>
 
-    <!-- Cart Modal (Dilengkapi Fitur Voucher) -->
+    <!-- Cart Modal -->
     <div class="modal-overlay" id="cartModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -312,7 +311,6 @@
             </div>
             <div class="modal-body" id="cartItems"></div>
             
-            <!-- Menu Voucher -->
             <div class="voucher-section" style="margin: 10px 0; padding: 10px; background: #f0f4f1; border-radius: 8px;">
                 <label style="font-size: 0.85rem; font-weight:600;">Punya Kode Voucher?</label>
                 <div style="display: flex; gap: 5px; margin-top: 5px;">
