@@ -28,12 +28,13 @@ let currentSlide = 0;
 let selectedStar = 0;
 let discountPercent = 0;
 
-// Inisialisasi Database Ulasan Awal
+// Password Admin Rahasia (Bisa diubah sesuai keinginanmu)
+const ADMIN_SECRET_PASSWORD = "nengahsenja2026";
+
 if (!localStorage.getItem('reviews')) {
     localStorage.setItem('reviews', JSON.stringify([
-        { name: "Devi Alfilovita", text: "Kopi Senja Bojongsari is one of the best merchants! Pelayanan cepat dan sangat memuaskan.", stars: 5 },
-        { name: "Rian Kusuma", text: "Cita rasa kopi lokal kualitas internasional ada di Bojongsari!", stars: 5 },
-        { name: "Siti Rahma", text: "Kopi susu gula arennya juara banget! Dekat dari rumah.", stars: 5 }
+        { name: "Devi Alfilovita", text: "Kopi Senja Bojongsari is one of the best merchants! Pelayanan cepat.", stars: 5 },
+        { name: "Rian Kusuma", text: "Cita rasa kopi lokal kualitas internasional!", stars: 5 }
     ]));
 }
 
@@ -65,11 +66,119 @@ function switchPage(pageId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (pageId === 'admin') {
-        renderAdminOrders();
+        checkAdminSession();
     }
 }
 
-// Render Slider Testimoni secara Dinamis (Mendukung Banyak Slide)
+// Keamanan Login Admin
+function verifyAdminPassword() {
+    const pass = document.getElementById('adminPasswordInput').value;
+    if (pass === ADMIN_SECRET_PASSWORD) {
+        localStorage.setItem('isAdminLoggedIn', 'true');
+        document.getElementById('adminLoginBox').style.display = 'none';
+        document.getElementById('adminDashboardContent').style.display = 'block';
+        renderAdminDashboard();
+    } else {
+        alert('Password admin salah!');
+    }
+}
+
+function checkAdminSession() {
+    const isLogged = localStorage.getItem('isAdminLoggedIn');
+    if (isLogged === 'true') {
+        document.getElementById('adminLoginBox').style.display = 'none';
+        document.getElementById('adminDashboardContent').style.display = 'block';
+        renderAdminDashboard();
+    } else {
+        document.getElementById('adminLoginBox').style.display = 'block';
+        document.getElementById('adminDashboardContent').style.display = 'none';
+    }
+}
+
+function logoutAdmin() {
+    localStorage.removeItem('isAdminLoggedIn');
+    document.getElementById('adminPasswordInput').value = '';
+    checkAdminSession();
+}
+
+// Render Dashboard Admin (Pesanan & Hapus Ulasan)
+function renderAdminDashboard() {
+    renderAdminOrders();
+    renderAdminReviews();
+}
+
+function renderAdminOrders() {
+    const tbody = document.getElementById('adminOrderList');
+    if (!tbody) return;
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    tbody.innerHTML = '';
+
+    if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#777;">Belum ada pesanan.</td></tr>`;
+        return;
+    }
+
+    orders.forEach((ord, idx) => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #ddd';
+        tr.innerHTML = `
+            <td style="padding:10px;">#${ord.id}</td>
+            <td style="padding:10px;">${ord.name}<br><small>${ord.phone}</small></td>
+            <td style="padding:10px;">${ord.items}</td>
+            <td style="padding:10px;">${formatRupiah(ord.total)}</td>
+            <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#d4edda':ord.status==='Dibatalkan'?'#f8d7da':'#fff3cd'};">${ord.status}</span></td>
+            <td style="padding:10px;">
+                <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Setuju</button>
+                <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Selesai</button>
+                <button onclick="updateOrderStatus(${idx}, 'Dibatalkan')" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Batal</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function updateOrderStatus(index, status) {
+    let orders = JSON.parse(localStorage.getItem('orders'));
+    orders[index].status = status;
+    localStorage.setItem('orders', JSON.stringify(orders));
+    renderAdminOrders();
+}
+
+// Fitur Hapus Ulasan dari Admin
+function renderAdminReviews() {
+    const tbody = document.getElementById('adminReviewList');
+    if (!tbody) return;
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    tbody.innerHTML = '';
+
+    if (reviews.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; color:#777;">Belum ada ulasan.</td></tr>`;
+        return;
+    }
+
+    reviews.forEach((rev, idx) => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #ddd';
+        tr.innerHTML = `
+            <td style="padding:10px;">${rev.name}</td>
+            <td style="padding:10px;">⭐ ${rev.stars}</td>
+            <td style="padding:10px;">${rev.text}</td>
+            <td style="padding:10px;"><button onclick="deleteReview(${idx})" style="background:#dc3545; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Hapus</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteReview(index) {
+    let reviews = JSON.parse(localStorage.getItem('reviews'));
+    reviews.splice(index, 1);
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+    renderAdminReviews();
+    renderReviews();
+    alert('Ulasan berhasil dihapus.');
+}
+
+// Render Slider Testimoni
 function renderReviews() {
     const slider = document.getElementById('testimonialSlider');
     const dotsContainer = document.getElementById('sliderDots');
@@ -84,8 +193,6 @@ function renderReviews() {
 
     reviews.forEach((rev, index) => {
         const starHTML = '<i class="fa-solid fa-star" style="color:#ffc107;"></i>'.repeat(rev.stars);
-        
-        // Buat kartu slide testimoni
         const card = document.createElement('div');
         card.className = `testi-card ${index === currentSlide ? 'active' : ''}`;
         card.innerHTML = `
@@ -99,7 +206,6 @@ function renderReviews() {
         `;
         slider.appendChild(card);
 
-        // Buat titik navigasi (dot) otomatis sebanyak jumlah ulasan
         const dot = document.createElement('span');
         dot.className = `dot ${index === currentSlide ? 'active' : ''}`;
         dot.onclick = () => goToSlide(index);
@@ -120,12 +226,8 @@ function showSlide(index) {
     dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
 }
 
-function goToSlide(index) { 
-    currentSlide = index; 
-    showSlide(currentSlide); 
-}
+function goToSlide(index) { currentSlide = index; showSlide(currentSlide); }
 
-// Kirim Ulasan Rating Baru & Langsung Masuk ke Slider Multi-Slide
 function submitReview() {
     const name = document.getElementById('reviewerName').value.trim();
     const text = document.getElementById('userReviewText').value.trim();
@@ -137,33 +239,28 @@ function submitReview() {
     reviews.push({ name, text, stars: selectedStar });
     localStorage.setItem('reviews', JSON.stringify(reviews));
 
-    alert('Terima kasih! Ulasan & rating Anda berhasil ditambahkan ke slide testimoni.');
+    alert('Terima kasih! Ulasan Anda berhasil ditambahkan.');
     document.getElementById('reviewerName').value = '';
     document.getElementById('userReviewText').value = '';
     selectedStar = 0;
     updateStarUI(0);
-    
-    // Refresh slider ke ulasan terbaru yang baru saja dikirim
     currentSlide = reviews.length - 1;
     renderReviews();
     showSlide(currentSlide);
 }
 
-// Helper Update Bintang Input Form
 function updateStarUI(rating) {
     const stars = document.querySelectorAll('#starRating i');
     stars.forEach((star, index) => {
         if (index < rating) {
-            star.classList.remove('fa-regular');
-            star.classList.add('fa-solid');
+            star.classList.remove('fa-regular'); star.classList.add('fa-solid');
         } else {
-            star.classList.remove('fa-solid');
-            star.classList.add('fa-regular');
+            star.classList.remove('fa-solid'); star.classList.add('fa-regular');
         }
     });
 }
 
-// Render Menu 22 Item
+// Render Menu
 function renderMenu(filter = 'all') {
     const menuGrid = document.getElementById('menuGrid');
     if (!menuGrid) return;
@@ -179,7 +276,7 @@ function renderMenu(filter = 'all') {
             <div class="menu-card-body">
                 <div>
                     <h3 style="font-size: 1rem; margin-bottom: 4px;">${item.name}</h3>
-                    <p style="font-size:0.8rem; color:#666;">${item.description}</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted);">${item.description}</p>
                 </div>
                 <div class="menu-card-bottom">
                     <strong>${formatRupiah(item.price)}</strong>
@@ -191,20 +288,20 @@ function renderMenu(filter = 'all') {
     });
 }
 
-// Logika Voucher
+// Voucher Logic
 function applyVoucher() {
     const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
     const msg = document.getElementById('voucherMessage');
 
     if (code === 'KOPIZENJA' || code === 'BOJONGSARI') {
         discountPercent = 15;
-        msg.textContent = 'Voucher Berhasil! Diskon 15% diterapkan.';
+        msg.textContent = 'Voucher Berhasil! Diskon 15%';
     } else if (code === 'SENJADAMAI') {
         discountPercent = 10;
-        msg.textContent = 'Voucher Berhasil! Diskon 10% diterapkan.';
+        msg.textContent = 'Voucher Berhasil! Diskon 10%';
     } else {
         discountPercent = 0;
-        msg.textContent = 'Kode voucher tidak valid!';
+        msg.textContent = 'Kode voucher salah!';
         msg.style.color = 'red';
         return;
     }
@@ -212,16 +309,13 @@ function applyVoucher() {
     updateCartUI();
 }
 
-// Cart & WhatsApp Order Logic
 function addToCart(id) {
     const product = menuItems.find(p => p.id === id);
     const exist = cart.find(c => c.id === id);
-
     if (exist) exist.qty += 1;
     else cart.push({ ...product, qty: 1 });
-
     updateCartUI();
-    alert(`${product.name} telah dimasukkan ke keranjang!`);
+    alert(`${product.name} dimasukkan ke keranjang!`);
 }
 
 function updateCartUI() {
@@ -235,7 +329,7 @@ function updateCartUI() {
 
     cartItemsContainer.innerHTML = '';
     if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#888;">Keranjang belanja kosong.</p>';
+        cartItemsContainer.innerHTML = '<p style="text-align:center; color:#888;">Keranjang kosong.</p>';
     } else {
         cart.forEach(item => {
             const div = document.createElement('div');
@@ -244,69 +338,63 @@ function updateCartUI() {
             div.style.marginBottom = '8px';
             div.style.borderBottom = '1px solid #eee';
             div.style.paddingBottom = '6px';
-            div.innerHTML = `
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <small>${item.qty} x ${formatRupiah(item.price)}</small>
-                </div>
-                <div><strong>${formatRupiah(item.qty * item.price)}</strong></div>
-            `;
+            div.innerHTML = `<div><strong>${item.name}</strong><br><small>${item.qty} x ${formatRupiah(item.price)}</small></div><div><strong>${formatRupiah(item.qty * item.price)}</strong></div>`;
             cartItemsContainer.appendChild(div);
         });
     }
 
     let totalSum = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-    if (discountPercent > 0) {
-        totalSum = totalSum - (totalSum * discountPercent / 100);
-    }
+    if (discountPercent > 0) totalSum = totalSum - (totalSum * discountPercent / 100);
     cartTotalAmount.textContent = formatRupiah(totalSum);
 }
 
-// Panel Admin
-function renderAdminOrders() {
-    const tbody = document.getElementById('adminOrderList');
-    if (!tbody) return;
-
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    tbody.innerHTML = '';
-
-    if (orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#777;">Belum ada pesanan masuk.</td></tr>`;
-        return;
+// Cek Jam Operasional Toko Otomatis
+function checkStoreStatus() {
+    const badge = document.getElementById('storeStatusBadge');
+    if (!badge) return;
+    const currentHour = new Date().getHours();
+    if (currentHour >= 8 && currentHour < 23) {
+        badge.textContent = "Buka (08:00 - 23:00)";
+        badge.style.background = "#28a745";
+    } else {
+        badge.textContent = "Tutup";
+        badge.style.background = "#dc3545";
     }
-
-    orders.forEach((ord, idx) => {
-        const tr = document.createElement('tr');
-        tr.style.borderBottom = '1px solid #ddd';
-        tr.innerHTML = `
-            <td style="padding:10px;">#${ord.id}</td>
-            <td style="padding:10px;">${ord.name}<br><small>${ord.phone}</small></td>
-            <td style="padding:10px;">${ord.items}</td>
-            <td style="padding:10px;">${formatRupiah(ord.total)}</td>
-            <td style="padding:10px;">${ord.payment}</td>
-            <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#d4edda':ord.status==='Dibatalkan'?'#f8d7da':'#fff3cd'};">${ord.status}</span></td>
-            <td style="padding:10px;">
-                <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Setuju</button>
-                <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Selesai</button>
-                <button onclick="updateOrderStatus(${idx}, 'Dibatalkan')" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Batal</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
 }
 
-function updateOrderStatus(index, status) {
-    let orders = JSON.parse(localStorage.getItem('orders'));
-    orders[index].status = status;
-    localStorage.setItem('orders', JSON.stringify(orders));
-    renderAdminOrders();
-    alert(`Status pesanan #${orders[index].id} diubah menjadi: ${status}`);
-}
-
-// Inisialisasi Event
+// Inisialisasi Event Utama
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
     renderReviews();
+    checkStoreStatus();
+
+    // Dark Mode Toggle Logic
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+
+    themeBtn?.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        let theme = 'light';
+        if (document.body.classList.contains('dark-mode')) {
+            theme = 'dark';
+            themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        } else {
+            themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+        localStorage.setItem('theme', theme);
+    });
+
+    // Scroll to Top Button Logic
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) scrollBtn.classList.add('show');
+        else scrollBtn.classList.remove('show');
+    });
+    scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     document.querySelectorAll('[data-page]').forEach(el => {
         el.addEventListener('click', (e) => {
@@ -323,7 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Rating Bintang Interaktif Form
     document.querySelectorAll('#starRating i').forEach(star => {
         star.addEventListener('click', function() {
             selectedStar = parseInt(this.getAttribute('data-value'));
@@ -331,7 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Tombol Geser Slider Testimoni
     document.getElementById('prevSlide')?.addEventListener('click', () => showSlide(currentSlide - 1));
     document.getElementById('nextSlide')?.addEventListener('click', () => showSlide(currentSlide + 1));
 
@@ -345,18 +431,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('complaintForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Komplain/Pesan Anda telah dikirim ke sekolahmail588@gmail.com dan nomor 0881025467022.');
+        alert('Komplain/Pesan Anda telah dikirim ke email sekolahmail588@gmail.com dan WhatsApp 0881025467022.');
         e.target.reset();
     });
 
-    // Checkout Langsung ke WhatsApp & Simpan ke Admin
     document.getElementById('checkoutWaBtn')?.addEventListener('click', () => {
         if (cart.length === 0) return alert('Keranjang masih kosong!');
         const name = document.getElementById('buyerName').value.trim();
         const phone = document.getElementById('buyerPhone').value.trim();
         const payment = document.getElementById('paymentMethod').value;
 
-        if (!name || !phone) return alert('Silakan masukkan Nama dan Nomor WhatsApp Anda!');
+        if (!name || !phone) return alert('Masukkan Nama dan Nomor WhatsApp!');
 
         let totalSum = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
         if (discountPercent > 0) totalSum = totalSum - (totalSum * discountPercent / 100);
@@ -376,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('orders', JSON.stringify(orders));
 
         const waNumber = "62881025467022";
-        const message = `Halo Kopi Senja Bojongsari, saya ingin memesan:%0A%0A*Nama:* ${name}%0A*No HP/WA:* ${phone}%0A*Pesanan:* ${itemsSummary}%0A*Total Harga:* ${formatRupiah(totalSum)}%0A*Metode Pembayaran:* ${payment}%0A*Diskon Voucher:* ${discountPercent}%0A%0AMohon segera diproses ya!`;
+        const message = `Halo Kopi Senja Bojongsari, saya ingin memesan:%0A%0A*Nama:* ${name}%0A*No HP/WA:* ${phone}%0A*Pesanan:* ${itemsSummary}%0A*Total Harga:* ${formatRupiah(totalSum)}%0A*Metode Pembayaran:* ${payment}%0A*Diskon Voucher:* ${discountPercent}%25`;
 
         cart = [];
         discountPercent = 0;
