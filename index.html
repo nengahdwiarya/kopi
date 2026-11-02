@@ -20,7 +20,10 @@
     <!-- Announcement Bar -->
     <div class="announcement-bar">
         <p>Kini Hadir di Bojongsari, Depok! Nikmati kesegaran kopi pilihan setiap hari.</p>
-        <button class="btn-visit" onclick="switchPage('toko')">Kunjungi Toko</button>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span id="storeStatusBadge" style="background:#28a745; padding:2px 8px; border-radius:10px; font-size:0.7rem;">Cek Toko</span>
+            <button class="btn-visit" onclick="switchPage('toko')">Lokasi</button>
+        </div>
     </div>
 
     <!-- Header / Navbar -->
@@ -45,6 +48,10 @@
             </nav>
 
             <div class="nav-actions">
+                <!-- Tombol Dark Mode -->
+                <button class="theme-toggle-btn" id="themeToggleBtn" title="Ganti Tema">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
                 <button class="cart-icon" id="cartBtn">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
@@ -92,7 +99,7 @@
             </div>
         </section>
 
-        <!-- Testimoni / Multi-Slide Rating Slider Dinamis -->
+        <!-- Testimoni Slider -->
         <section class="testimonial-section">
             <div class="container">
                 <h2 class="section-title text-center">Testimoni & Rating Pelanggan</h2>
@@ -100,15 +107,10 @@
 
                 <div class="testimonial-slider-wrapper">
                     <button class="slider-arrow prev-btn" id="prevSlide"><i class="fa-solid fa-chevron-left"></i></button>
-                    
-                    <div class="testimonial-slider" id="testimonialSlider">
-                        <!-- Slide ulasan akan bertambah otomatis secara dinamis dari database -->
-                    </div>
-
+                    <div class="testimonial-slider" id="testimonialSlider"></div>
                     <button class="slider-arrow next-btn" id="nextSlide"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
 
-                <!-- Indikator Titik Sesuai Jumlah Slide -->
                 <div class="slider-dots" id="sliderDots"></div>
 
                 <!-- Form Beri Rating / Ulasan -->
@@ -169,17 +171,13 @@
     <!-- ================= PAGE 5: INVESTOR ================= -->
     <main id="page-investor" class="page-content container section-page">
         <h1 class="page-title">Hubungan Investor</h1>
-        <div class="content-box">
-            <p>Informasi kemitraan strategis cabang Bojongsari dan ekspansi nasional. Email: investor@kopisenja.com</p>
-        </div>
+        <div class="content-box"><p>Informasi kemitraan strategis cabang Bojongsari dan ekspansi nasional. Email: investor@kopisenja.com</p></div>
     </main>
 
     <!-- ================= PAGE 6: TATA KELOLA ================= -->
     <main id="page-tatakelola" class="page-content container section-page">
         <h1 class="page-title">Tata Kelola Perusahaan</h1>
-        <div class="content-box">
-            <p>Komitmen pelayanan transparan dan profesional di seluruh cabang Kopi Senja.</p>
-        </div>
+        <div class="content-box"><p>Komitmen pelayanan transparan dan profesional di seluruh cabang Kopi Senja.</p></div>
     </main>
 
     <!-- ================= PAGE 7: KOLABORASI ================= -->
@@ -206,31 +204,17 @@
     <!-- ================= PAGE 9: KARIR ================= -->
     <main id="page-karir" class="page-content container section-page">
         <h1 class="page-title">Karir di Kopi Senja</h1>
-        <div class="content-box">
-            <p>Lowongan kerja barista dan staf operasional untuk cabang Bojongsari, Depok.</p>
-        </div>
+        <div class="content-box"><p>Lowongan kerja barista dan staf operasional untuk cabang Bojongsari, Depok.</p></div>
     </main>
 
-    <!-- ================= PAGE 10: KONTAK & KOMPLAIN ================= -->
+    <!-- ================= PAGE 10: KONTAK ================= -->
     <main id="page-kontak" class="page-content container section-page">
         <h1 class="page-title">Kontak & Layanan Komplain</h1>
         <div class="contact-grid">
             <div class="contact-info">
                 <h3>Hubungi Kami</h3>
-                <div class="info-card">
-                    <i class="fa-solid fa-phone"></i>
-                    <div>
-                        <h4>WhatsApp / Telepon</h4>
-                        <p><strong>0881025467022</strong></p>
-                    </div>
-                </div>
-                <div class="info-card">
-                    <i class="fa-solid fa-envelope"></i>
-                    <div>
-                        <h4>Email Resmi</h4>
-                        <p><strong>sekolahmail588@gmail.com</strong></p>
-                    </div>
-                </div>
+                <div class="info-card"><i class="fa-solid fa-phone"></i><div><h4>WhatsApp</h4><p><strong>0881025467022</strong></p></div></div>
+                <div class="info-card"><i class="fa-solid fa-envelope"></i><div><h4>Email Resmi</h4><p><strong>sekolahmail588@gmail.com</strong></p></div></div>
                 <div class="social-section">
                     <h4>Media Sosial Kami:</h4>
                     <div class="social-btn-group">
@@ -239,47 +223,79 @@
                     </div>
                 </div>
             </div>
-
             <form class="contact-form" id="complaintForm">
                 <h3>Formulir Komplain / Pesan</h3>
                 <div class="form-group"><input type="text" id="compName" placeholder="Nama Lengkap" required></div>
                 <div class="form-group"><input type="email" id="compEmail" placeholder="Email Anda" required></div>
                 <div class="form-group"><input type="text" id="compPhone" placeholder="Nomor Telepon/WA" required></div>
-                <div class="form-group"><textarea id="compMessage" rows="4" placeholder="Tuliskan komplain atau pesan..." required></textarea></div>
+                <div class="form-group"><textarea id="compMessage" rows="4" placeholder="Tuliskan komplain..." required></textarea></div>
                 <button type="submit" class="btn btn-primary btn-block">Kirim Komplain</button>
             </form>
         </div>
     </main>
 
-    <!-- ================= PAGE 11: PANEL ADMIN ================= -->
+    <!-- ================= PAGE 11: PANEL ADMIN (Dilindungi Password) ================= -->
     <main id="page-admin" class="page-content container section-page">
-        <h1 class="page-title"><i class="fa-solid fa-lock"></i> Panel Admin Pemilik Web</h1>
-        <div class="content-box">
-            <h3>Daftar Pesanan Masuk (Real-time Database)</h3>
-            <p>Sebagai pemilik web, Anda dapat menyetujui, membatalkan, atau menandai selesai pesanan pelanggan di bawah ini:</p>
-            <div style="overflow-x: auto; margin-top: 20px;">
-                <table style="width: 100%; border-collapse: collapse; background: #fff;" id="adminOrderTable">
-                    <thead>
-                        <tr style="background: var(--primary-color); color: #fff; text-align: left;">
-                            <th style="padding: 10px;">ID Pesanan</th>
-                            <th style="padding: 10px;">Nama & Telp</th>
-                            <th style="padding: 10px;">Detail Menu</th>
-                            <th style="padding: 10px;">Total</th>
-                            <th style="padding: 10px;">Pembayaran</th>
-                            <th style="padding: 10px;">Status</th>
-                            <th style="padding: 10px;">Aksi Admin</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminOrderList"></tbody>
-                </table>
+        <div id="adminLoginBox" class="content-box" style="max-width: 400px; margin: 40px auto; text-align: center;">
+            <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-lock"></i> Login Admin</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 15px; color: #666;">Masukkan sandi khusus pemilik web:</p>
+            <input type="password" id="adminPasswordInput" placeholder="Password Admin" style="width:100%; padding:10px; margin-bottom:15px; border-radius:8px; border:1px solid #ccc;">
+            <button class="btn btn-primary btn-block" onclick="verifyAdminPassword()">Masuk Dashboard</button>
+        </div>
+
+        <div id="adminDashboardContent" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 class="page-title" style="margin:0;">Dashboard Pemilik Web</h1>
+                <button class="btn" style="background:#dc3545; color:#fff; padding:6px 15px; font-size:0.85rem;" onclick="logoutAdmin()">Keluar Admin</button>
+            </div>
+
+            <!-- Tabel Pesanan -->
+            <div class="content-box" style="margin-bottom: 30px;">
+                <h3>Daftar Pesanan Masuk</h3>
+                <div style="overflow-x: auto; margin-top: 15px;">
+                    <table style="width: 100%; border-collapse: collapse; background: var(--card-bg, #fff);" id="adminOrderTable">
+                        <thead>
+                            <tr style="background: var(--primary-color); color: #fff; text-align: left;">
+                                <th style="padding: 10px;">ID</th>
+                                <th style="padding: 10px;">Nama & Telp</th>
+                                <th style="padding: 10px;">Menu</th>
+                                <th style="padding: 10px;">Total</th>
+                                <th style="padding: 10px;">Status</th>
+                                <th style="padding: 10px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrderList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Manajemen Hapus Rating/Ulasan -->
+            <div class="content-box">
+                <h3>Kelola & Hapus Ulasan / Rating Pelanggan</h3>
+                <div style="overflow-x: auto; margin-top: 15px;">
+                    <table style="width: 100%; border-collapse: collapse; background: var(--card-bg, #fff);">
+                        <thead>
+                            <tr style="background: #333; color: #fff; text-align: left;">
+                                <th style="padding: 10px;">Nama Pengulas</th>
+                                <th style="padding: 10px;">Rating</th>
+                                <th style="padding: 10px;">Isi Ulasan</th>
+                                <th style="padding: 10px;">Aksi Hapus</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminReviewList"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/62881025467022?text=Halo%20Kopi%20Senja%20Bojongsari,%20saya%20ingin%20bertanya" target="_blank" class="floating-wa">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <!-- Floating WhatsApp & Scroll to Top Buttons -->
+    <div class="floating-buttons-group">
+        <button id="scrollToTopBtn" class="scroll-top-btn" title="Kembali ke atas"><i class="fa-solid fa-arrow-up"></i></button>
+        <a href="https://wa.me/62881025467022?text=Halo%20Kopi%20Senja%20Bojongsari" target="_blank" class="floating-wa" title="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -297,9 +313,7 @@
                 </div>
             </div>
         </div>
-        <div class="copyright">
-            <p>&copy; 2026 Kopi Senja Bojongsari. All Rights Reserved.</p>
-        </div>
+        <div class="copyright"><p>&copy; 2026 Kopi Senja Bojongsari. All Rights Reserved.</p></div>
     </footer>
 
     <!-- Cart Modal -->
@@ -311,7 +325,7 @@
             </div>
             <div class="modal-body" id="cartItems"></div>
             
-            <div class="voucher-section" style="margin: 10px 0; padding: 10px; background: #f0f4f1; border-radius: 8px;">
+            <div class="voucher-section" style="margin: 10px 0; padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px;">
                 <label style="font-size: 0.85rem; font-weight:600;">Punya Kode Voucher?</label>
                 <div style="display: flex; gap: 5px; margin-top: 5px;">
                     <input type="text" id="voucherCodeInput" placeholder="Cth: KOPIZENJA" style="flex:1; padding:6px; font-size:0.85rem; border:1px solid #ccc; border-radius:5px;">
