@@ -67,8 +67,8 @@ h1, h2, h3 { font-family: var(--font-heading); }
 .pill-tag { display: inline-block; border: 2px dashed #a0a0a0; padding: 6px 20px; border-radius: 30px; color: #666; margin: 10px 0 25px; font-size: 0.9rem; }
 .testimonial-slider-wrapper { position: relative; max-width: 750px; margin: 0 auto; padding: 0 40px; }
 .testimonial-slider { overflow: hidden; position: relative; min-height: 220px; }
-.testi-card { position: absolute; inset: 0; opacity: 0; transition: all 0.5s ease; background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; }
-.testi-card.active { opacity: 1; position: relative; }
+.testi-card { position: absolute; inset: 0; opacity: 0; transition: all 0.5s ease; background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; pointer-events: none; }
+.testi-card.active { opacity: 1; position: relative; pointer-events: auto; }
 .quote-icon { font-size: 1.8rem; color: var(--primary-color); margin-bottom: 8px; }
 .testi-text { font-size: 0.95rem; color: #444; margin-bottom: 15px; }
 .testi-author strong { display: block; font-size: 1rem; }
@@ -76,7 +76,7 @@ h1, h2, h3 { font-family: var(--font-heading); }
 
 .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--primary-color); color: #fff; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 10; }
 .prev-btn { left: 0px; } .next-btn { right: 0px; }
-.slider-dots { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
+.slider-dots { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
 .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--primary-color); cursor: pointer; }
 .dot.active { background: var(--primary-color); }
 
