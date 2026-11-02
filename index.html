@@ -1,254 +1,381 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#211710">
-  <meta name="description" content="KOPI P.L.M - Specialty Coffee, Crafted With Passion.">
-  <title>KOPI P.L.M | Specialty Coffee</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kopi Senja - From Indonesia to the world.</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="navbar">
-  <a href="#" class="logo">P.L.M<span>.</span></a>
-
-  <nav id="navMenu">
-    <a href="#home">Home</a>
-    <a href="#menu">Our Menu</a>
-    <a href="#story">Our Story</a>
-    <a href="#reservation">Reservation</a>
-    <a href="#reviews">Reviews</a>
-  </nav>
-
-  <div class="nav-actions">
-    <button id="languageBtn" class="icon-btn" aria-label="Change language">ID</button>
-    <button id="themeBtn" class="icon-btn" aria-label="Change theme">☾</button>
-    <button id="wishlistBtn" class="icon-btn" aria-label="Wishlist">♡ <span id="wishCount">0</span></button>
-    <button id="cartBtn" class="cart-btn">Cart (<span id="cartCount">0</span>)</button>
-    <button id="menuToggle" class="icon-btn mobile-menu" aria-label="Open menu">☰</button>
-  </div>
-</header>
-
-<main>
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <span class="eyebrow">SPECIALTY COFFEE EXPERIENCE</span>
-      <h1>More Than Coffee.<br><em>It's an Experience.</em></h1>
-      <p>Discover the art of exceptional coffee. Carefully sourced beans, crafted with passion, served with love.</p>
-      <div class="hero-buttons">
-        <a href="#menu" class="btn-primary">Explore Our Menu ↗</a>
-        <a href="#story" class="btn-outline">Discover Our Story</a>
-      </div>
-      <div class="hero-info">
-        <div><strong>100%</strong><small>Arabica Beans</small></div>
-        <div><strong>15+</strong><small>Coffee Selections</small></div>
-        <div><strong>4.9/5</strong><small>Customer Rating</small></div>
-      </div>
-    </div>
-    <div class="hero-image">
-      <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1000" alt="Specialty coffee">
-      <div class="image-tag">EST. 2024 · INDONESIA</div>
-    </div>
-  </section>
-
-  <section class="announcement">
-    <span>✦ FRESHLY BREWED</span>
-    <span>✦ PREMIUM BEANS</span>
-    <span>✦ CRAFTED WITH PASSION</span>
-    <span>✦ GOOD COFFEE, GOOD MOMENTS</span>
-  </section>
-
-  <section class="menu-section section" id="menu">
-    <div class="section-heading">
-      <div>
-        <span class="eyebrow">OUR SELECTION</span>
-        <h2>Find Your <em>Perfect Cup.</em></h2>
-        <p>Every cup tells a different story. Find yours.</p>
-      </div>
-      <div class="search-box">
-        <input type="search" id="searchInput" placeholder="Search coffee...">
-        <span>⌕</span>
-      </div>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <p>Something new from us! Enjoy a new experience at KOPI SENJA DONUT</p>
+        <button class="btn-visit">Visit</button>
     </div>
 
-    <div class="filters" id="categoryFilters">
-      <button class="filter active" data-category="all">All Products</button>
-      <button class="filter" data-category="coffee">Coffee</button>
-      <button class="filter" data-category="noncoffee">Non Coffee</button>
-      <button class="filter" data-category="food">Food & Bakery</button>
+    <!-- Header / Navbar -->
+    <header class="header">
+        <div class="container navbar">
+            <a href="#" class="logo" onclick="switchPage('home')">
+                <i class="fa-solid fa-mug-hot"></i> Kopi<span>Senja</span>
+            </a>
+            
+            <nav class="nav-links" id="navLinks">
+                <a href="#" onclick="switchPage('home')" class="nav-item active" data-page="home">Beranda</a>
+                <a href="#" onclick="switchPage('tentang')" class="nav-item" data-page="tentang">Tentang</a>
+                <a href="#" onclick="switchPage('menu')" class="nav-item" data-page="menu">Menu</a>
+                <a href="#" onclick="switchPage('toko')" class="nav-item" data-page="toko">Toko</a>
+                <a href="#" onclick="switchPage('investor')" class="nav-item" data-page="investor">Investor</a>
+                <a href="#" onclick="switchPage('tatakelola')" class="nav-item" data-page="tatakelola">Tata Kelola</a>
+                <a href="#" onclick="switchPage('kolaborasi')" class="nav-item" data-page="kolaborasi">Kolaborasi</a>
+                <a href="#" onclick="switchPage('berita')" class="nav-item" data-page="berita">Berita</a>
+                <a href="#" onclick="switchPage('karir')" class="nav-item" data-page="karir">Karir</a>
+                <a href="#" onclick="switchPage('kontak')" class="nav-item" data-page="kontak">Kontak</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="cart-icon" id="cartBtn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+                <button class="mobile-toggle" id="menuToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= PAGE 1: BERANDA ================= -->
+    <main id="page-home" class="page-content active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="container hero-content">
+                <h1 class="hero-title">
+                    From Indonesia <br>
+                    <span class="italic-serif">to the world.</span>
+                </h1>
+                <p class="hero-subtitle">Membawa cita rasa kopi autentik Nusantara ke panggung dunia dengan kualitas terbaik dan inovasi tiada henti.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="switchPage('menu')">Lihat Menu</button>
+                    <button class="btn btn-outline" onclick="switchPage('tentang')">Tentang Kami</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- App Download Section (Mirip Gambar 1) -->
+        <section class="app-section">
+            <div class="container">
+                <div class="app-card-box">
+                    <div class="app-image-mockup">
+                        <i class="fa-solid fa-mobile-screen-button mockup-icon"></i>
+                    </div>
+                    <div class="app-text-content">
+                        <span class="badge-tag">KOPI SENJA APP</span>
+                        <h2>Kopi hanya dalam satu ketukan!<br><span>Cepat dan mudah dengan berbagai keuntungan ekstra</span></h2>
+                        <p>Nikmati pengalaman minum kopi terbaik, promo eksklusif, voucher menarik, dan banyak lainnya!</p>
+                        <p><strong>Unduh sekarang!</strong></p>
+                        <div class="store-buttons">
+                            <a href="#" class="store-btn"><i class="fa-brands fa-google-play"></i> Google Play</a>
+                            <a href="#" class="store-btn"><i class="fa-brands fa-apple"></i> App Store</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimoni / Rating Slider (Mirip Gambar 2) -->
+        <section class="testimonial-section">
+            <div class="container">
+                <h2 class="section-title text-center">Testimoni</h2>
+                <div class="pill-tag">Kolaborasi Sukses Kami</div>
+
+                <!-- Testimonial Slider Container -->
+                <div class="testimonial-slider-wrapper">
+                    <button class="slider-arrow prev-btn" id="prevSlide"><i class="fa-solid fa-chevron-left"></i></button>
+                    
+                    <div class="testimonial-slider" id="testimonialSlider">
+                        <div class="testi-card active">
+                            <i class="fa-solid fa-quote-left quote-icon"></i>
+                            <p class="testi-text">"Kopi Senja is one of the best merchants that I ever handled. We had a great journey to create some collaborations such as Exclusive Seasonal Menu, Percaya Projex, etc. The team was really helpful and organized!"</p>
+                            <div class="testi-author">
+                                <strong>Devi Alfilovita</strong>
+                                <span>Key Account Manager - GrabFood</span>
+                            </div>
+                        </div>
+                        <div class="testi-card">
+                            <i class="fa-solid fa-quote-left quote-icon"></i>
+                            <p class="testi-text">"Cita rasa kopi lokal dengan kualitas internasional. Sistem pemesanan cepat dan pelayanannya sangat ramah. Kolaborasi kami berjalan sangat luar biasa."</p>
+                            <div class="testi-author">
+                                <strong>Rian Kusuma</strong>
+                                <span>Brand Partner</span>
+                            </div>
+                        </div>
+                        <div class="testi-card">
+                            <i class="fa-solid fa-quote-left quote-icon"></i>
+                            <p class="testi-text">"Kopi susu gula arennya juara banget! Selalu konsisten rasanya dan kemasannya aman banget buat delivery."</p>
+                            <div class="testi-author">
+                                <strong>Siti Rahma</strong>
+                                <span>Pelanggan Setia</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="slider-arrow next-btn" id="nextSlide"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <!-- Dots Indicator -->
+                <div class="slider-dots" id="sliderDots">
+                    <span class="dot active" onclick="goToSlide(0)"></span>
+                    <span class="dot" onclick="goToSlide(1)"></span>
+                    <span class="dot" onclick="goToSlide(2)"></span>
+                </div>
+
+                <!-- Form Beri Rating / Ulasan -->
+                <div class="rating-box-form">
+                    <h3>Beri Rating & Ulasan Kamu</h3>
+                    <div class="star-rating" id="starRating">
+                        <i class="fa-star fa-regular" data-value="1"></i>
+                        <i class="fa-star fa-regular" data-value="2"></i>
+                        <i class="fa-star fa-regular" data-value="3"></i>
+                        <i class="fa-star fa-regular" data-value="4"></i>
+                        <i class="fa-star fa-regular" data-value="5"></i>
+                    </div>
+                    <textarea id="userReviewText" rows="3" placeholder="Tulis pendapatmu tentang Kopi Senja..."></textarea>
+                    <button class="btn btn-primary" onclick="submitReview()">Kirim Ulasan</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= PAGE 2: TENTANG ================= -->
+    <main id="page-tentang" class="page-content container section-page">
+        <h1 class="page-title">Tentang Kopi Senja</h1>
+        <p class="lead-text">Berdiri dengan semangat menyajikan kopi kualitas tinggi terbaik khas Indonesia.</p>
+        <div class="content-box">
+            <h3>Visi Kami</h3>
+            <p>Menjadi brand kopi terdepan dari Indonesia yang dikenal secara global karena kualitas, keberlanjutan, dan dampaknya bagi petani lokal.</p>
+            <h3>Misi Kami</h3>
+            <ul>
+                <li>Menyediakan biji kopi pilihan langsung dari petani Nusantara.</li>
+                <li>Menyajikan kehangatan dan rasa konsisten di setiap cangkir.</li>
+                <li>Berinovasi secara terus menerus dalam pelayanan berbasis teknologi.</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 3: MENU ================= -->
+    <main id="page-menu" class="page-content container section-page">
+        <h1 class="page-title">Menu Favorit</h1>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Semua</button>
+            <button class="filter-btn" data-filter="coffee">Kopi</button>
+            <button class="filter-btn" data-filter="non-coffee">Non-Kopi</button>
+            <button class="filter-btn" data-filter="snack">Cemilan</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <!-- Diisi secara dinamis melalui JS -->
+        </div>
+    </main>
+
+    <!-- ================= PAGE 4: TOKO ================= -->
+    <main id="page-toko" class="page-content container section-page">
+        <h1 class="page-title">Lokasi Toko Kami</h1>
+        <div class="grid-2">
+            <div class="store-card">
+                <h3>Kopi Senja - Jakarta Selatan</h3>
+                <p><i class="fa-solid fa-location-dot"></i> Jl. Senopati No. 45, Kebayoran Baru</p>
+                <p><i class="fa-solid fa-clock"></i> 08.00 - 22.00 WIB</p>
+            </div>
+            <div class="store-card">
+                <h3>Kopi Senja - Bandung</h3>
+                <p><i class="fa-solid fa-location-dot"></i> Jl. Riau No. 102, Bandung</p>
+                <p><i class="fa-solid fa-clock"></i> 08.00 - 23.00 WIB</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 5: INVESTOR ================= -->
+    <main id="page-investor" class="page-content container section-page">
+        <h1 class="page-title">Hubungan Investor</h1>
+        <div class="content-box">
+            <p>Kopi Senja terus berkembang pesat secara nasional dan internasional. Untuk informasi investasi, laporan keuangan, dan kemitraan strategis, silakan hubungi tim tim finansial kami.</p>
+            <p><strong>Email Hubungan Investor:</strong> investor@kopisenja.com</p>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 6: TATA KELOLA ================= -->
+    <main id="page-tatakelola" class="page-content container section-page">
+        <h1 class="page-title">Tata Kelola Perusahaan</h1>
+        <div class="content-box">
+            <p>Kami berkomitmen untuk menjalankan bisnis secara profesional, transparan, dan bertanggung jawab demi menciptakan nilai jangka panjang bagi seluruh stakeholder dan masyarakat.</p>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 7: KOLABORASI ================= -->
+    <main id="page-kolaborasi" class="page-content container section-page">
+        <h1 class="page-title">Kolaborasi</h1>
+        <div class="content-box">
+            <p>Tertarik untuk berkolaborasi membuat menu edisi terbatas, event, atau campaign unik bersama Kopi Senja? Mari ciptakan karya luar biasa bersama!</p>
+            <button class="btn btn-primary" onclick="switchPage('kontak')">Ajukan Kolaborasi</button>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 8: BERITA ================= -->
+    <main id="page-berita" class="page-content container section-page">
+        <h1 class="page-title">Berita & Artikel</h1>
+        <div class="news-list">
+            <article class="news-item">
+                <span class="date">02 November 2026</span>
+                <h3>Kopi Senja Resmi Membuka Cabang Baru di Asia Tenggara</h3>
+                <p>Langkah nyata membawa kopi lokal Indonesia semakin dikenal luas di pasar global.</p>
+            </article>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 9: KARIR ================= -->
+    <main id="page-karir" class="page-content container section-page">
+        <h1 class="page-title">Karir di Kopi Senja</h1>
+        <div class="content-box">
+            <p>Bergabunglah bersama kami untuk menghadirkan kehangatan di setiap cangkir kopi. Kami selalu mencari talenta berbakat!</p>
+            <ul>
+                <li>Barista (Full-time / Part-time)</li>
+                <li>Store Manager</li>
+                <li>Digital Marketing Specialist</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- ================= PAGE 10: KONTAK & KOMPLAIN ================= -->
+    <main id="page-kontak" class="page-content container section-page">
+        <h1 class="page-title">Kontak & Layanan Komplain</h1>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>Hubungi Kami</h3>
+                <p>Ada pertanyaan, kritik, saran, atau komplain? Kami siap membantu Anda.</p>
+                
+                <div class="info-card">
+                    <i class="fa-solid fa-phone"></i>
+                    <div>
+                        <h4>Telepon / WhatsApp Komplain</h4>
+                        <p><strong>0881025467022</strong></p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div>
+                        <h4>Email Resmi</h4>
+                        <p><strong>sekolahmail588@gmail.com</strong></p>
+                    </div>
+                </div>
+
+                <!-- Tombol Media Sosial -->
+                <div class="social-section">
+                    <h4>Ikuti Media Sosial Kami:</h4>
+                    <div class="social-btn-group">
+                        <a href="https://tiktok.com/@nengahnengah5" target="_blank" class="social-btn tiktok-btn">
+                            <i class="fa-brands fa-tiktok"></i> TikTok: nengahnengah5
+                        </a>
+                        <a href="https://instagram.com/aryanengahdwi" target="_blank" class="social-btn instagram-btn">
+                            <i class="fa-brands fa-instagram"></i> Instagram: aryanengahdwi
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <form class="contact-form" id="complaintForm">
+                <h3>Formulir Komplain / Pesan</h3>
+                <div class="form-group">
+                    <input type="text" id="compName" placeholder="Nama Lengkap" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="compEmail" placeholder="Email Anda" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="compPhone" placeholder="Nomor Telepon/WA" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="compMessage" rows="4" placeholder="Tuliskan komplain atau pesan Anda secara detail..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Kirim Komplain</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/62881025467022" target="_blank" class="floating-wa">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <i class="fa-solid fa-mug-hot"></i> Kopi<span>Senja</span>
+                </a>
+                <p>From Indonesia to the world.</p>
+            </div>
+            
+            <div class="footer-payments">
+                <p>Metode Pembayaran:</p>
+                <div class="payment-badges">
+                    <span><i class="fa-solid fa-wallet"></i> OVO</span>
+                    <span><i class="fa-solid fa-wallet"></i> DANA</span>
+                    <span><i class="fa-solid fa-wallet"></i> GoPay</span>
+                    <span><i class="fa-solid fa-qrcode"></i> QRIS</span>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 Kopi Senja. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Keranjang Pesanan</h3>
+                <button class="close-btn" id="closeCart">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Diisi via JS -->
+            </div>
+            <div class="modal-footer">
+                <div class="payment-selection">
+                    <label>Pilih Metode Pembayaran:</label>
+                    <select id="paymentMethod" class="form-control">
+                        <option value="OVO">OVO</option>
+                        <option value="DANA">DANA</option>
+                        <option value="GoPay">GoPay</option>
+                        <option value="ShopeePay">ShopeePay</option>
+                        <option value="QRIS">QRIS</option>
+                    </select>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotalAmount">Rp 0</span>
+                </div>
+                <button class="btn btn-primary btn-block" id="checkoutBtn">Bayar Sekarang</button>
+            </div>
+        </div>
     </div>
 
-    <div class="product-grid" id="productGrid"></div>
-  </section>
-
-  <section class="story-section" id="story">
-    <div class="story-image">
-      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1000" alt="Coffee brewing">
-    </div>
-    <div class="story-content">
-      <span class="eyebrow">THE STORY BEHIND P.L.M</span>
-      <h2>Good Coffee.<br><em>Better Connections.</em></h2>
-      <p>We believe coffee is more than just a drink. It's a moment to pause, connect, and appreciate the little things in life.</p>
-      <p>From carefully selected Indonesian coffee beans to every cup we serve, quality is always our priority.</p>
-      <a href="#reservation" class="text-link">Experience P.L.M ↗</a>
-    </div>
-  </section>
-
-  <section class="promo-section">
-    <div>
-      <span class="eyebrow">A LITTLE SOMETHING FOR YOU</span>
-      <h2>Your First Sip Deserves<br><em>Something Special.</em></h2>
-      <p>Use our welcome voucher and enjoy a special discount.</p>
-    </div>
-    <div class="voucher">
-      <span>WELCOME DISCOUNT</span>
-      <strong>PLM10</strong>
-      <small>10% OFF · MINIMUM PURCHASE Rp50.000</small>
-      <button id="copyVoucher">Copy Code</button>
-    </div>
-  </section>
-
-  <section class="reservation-section section" id="reservation">
-    <div class="reservation-info">
-      <span class="eyebrow">YOUR TABLE IS WAITING</span>
-      <h2>Make Time for<br><em>Good Coffee.</em></h2>
-      <p>Reserve your favorite spot and enjoy a memorable coffee experience with us.</p>
-      <div class="opening">
-        <p>OPENING HOURS</p>
-        <strong>Monday – Sunday</strong>
-        <span>09:00 AM – 10:00 PM</span>
-      </div>
-    </div>
-
-    <form id="reservationForm" class="reservation-form">
-      <h3>Book a Table</h3>
-      <label>Your Name<input type="text" id="resName" required placeholder="Full name"></label>
-      <label>Email<input type="email" id="resEmail" required placeholder="your@email.com"></label>
-      <div class="form-row">
-        <label>Date<input type="date" id="resDate" required></label>
-        <label>Time<input type="time" id="resTime" required></label>
-      </div>
-      <label>Number of Guests
-        <select id="resGuests">
-          <option value="1">1 Person</option>
-          <option value="2">2 People</option>
-          <option value="3">3 People</option>
-          <option value="4">4 People</option>
-          <option value="5">5 People</option>
-          <option value="6">6 People</option>
-        </select>
-      </label>
-      <label>Special Request<textarea id="resNote" placeholder="Any special request?"></textarea></label>
-      <button class="btn-primary full-btn" type="submit">Reserve Now ↗</button>
-    </form>
-  </section>
-
-  <section class="reviews-section section" id="reviews">
-    <div class="section-heading">
-      <div>
-        <span class="eyebrow">COMMUNITY STORIES</span>
-        <h2>Words From <em>Our Guests.</em></h2>
-      </div>
-      <span class="rating-summary">★★★★★ <strong>4.9/5</strong></span>
-    </div>
-
-    <div id="reviewList" class="review-grid"></div>
-
-    <form id="reviewForm" class="review-form">
-      <h3>Share Your Experience</h3>
-      <input type="text" id="reviewName" placeholder="Your name" required>
-      <select id="reviewRating">
-        <option value="5">★★★★★ - Excellent</option>
-        <option value="4">★★★★ - Great</option>
-        <option value="3">★★★ - Good</option>
-        <option value="2">★★ - Fair</option>
-        <option value="1">★ - Poor</option>
-      </select>
-      <textarea id="reviewMessage" placeholder="Write your experience..." required></textarea>
-      <button class="btn-primary" type="submit">Submit Review</button>
-    </form>
-  </section>
-</main>
-
-<footer class="footer">
-  <div class="footer-top">
-    <div>
-      <a href="#" class="logo footer-logo">P.L.M<span>.</span></a>
-      <p>Crafting moments, one cup at a time.</p>
-    </div>
-    <div>
-      <h4>EXPLORE</h4>
-      <a href="#home">Home</a>
-      <a href="#menu">Our Menu</a>
-      <a href="#story">Our Story</a>
-    </div>
-    <div>
-      <h4>INFORMATION</h4>
-      <a href="#reservation">Reservation</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#menu">Order Coffee</a>
-    </div>
-    <div>
-      <h4>FOLLOW US</h4>
-      <a href="https://instagram.com/" target="_blank">Instagram ↗</a>
-      <a href="https://tiktok.com/" target="_blank">TikTok ↗</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 KOPI P.L.M. All Rights Reserved.</span>
-    <span>Made with passion & coffee ☕</span>
-  </div>
-</footer>
-
-<!-- CART SIDEBAR -->
-<div class="overlay" id="overlay"></div>
-<aside class="cart-sidebar" id="cartSidebar">
-  <div class="sidebar-heading">
-    <h3>Your Cart</h3>
-    <button id="closeCart" class="icon-btn">✕</button>
-  </div>
-  <div id="cartItems" class="cart-items"></div>
-  <div class="cart-bottom">
-    <div class="voucher-input">
-      <input id="voucherInput" placeholder="Voucher code">
-      <button id="applyVoucher">Apply</button>
-    </div>
-    <p id="voucherMessage"></p>
-    <div class="price-line"><span>Subtotal</span><strong id="subtotal">Rp0</strong></div>
-    <div class="price-line"><span>Discount</span><strong id="discount">Rp0</strong></div>
-    <div class="price-line total-line"><span>Total</span><strong id="total">Rp0</strong></div>
-    <button id="checkoutBtn" class="btn-primary full-btn">Checkout ↗</button>
-  </div>
-</aside>
-
-<!-- CHECKOUT MODAL -->
-<div class="modal" id="checkoutModal">
-  <div class="modal-content">
-    <button class="modal-close" id="closeCheckout">✕</button>
-    <span class="eyebrow">ALMOST THERE</span>
-    <h2>Complete Your <em>Order.</em></h2>
-    <form id="checkoutForm">
-      <label>Full Name<input id="customerName" required placeholder="Your name"></label>
-      <label>Phone Number<input id="customerPhone" type="tel" required placeholder="08xxxxxxxxxx"></label>
-      <label>Order Type
-        <select id="orderType">
-          <option value="Pickup">Pickup at store</option>
-          <option value="Dine In">Dine In</option>
-        </select>
-      </label>
-      <label>Notes<textarea id="orderNotes" placeholder="Additional notes"></textarea></label>
-      <button class="btn-primary full-btn" type="submit">Continue to WhatsApp ↗</button>
-    </form>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
