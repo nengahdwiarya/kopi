@@ -27,8 +27,6 @@ let cart = [];
 let currentSlide = 0;
 let selectedStar = 0;
 let discountPercent = 0;
-
-// Password Admin Rahasia (Bisa diubah sesuai keinginanmu)
 const ADMIN_SECRET_PASSWORD = "nengahsenja2026";
 
 if (!localStorage.getItem('reviews')) {
@@ -46,7 +44,6 @@ function formatRupiah(amount) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 }
 
-// Navigasi Pindah Halaman
 function switchPage(pageId) {
     const pages = document.querySelectorAll('.page-content');
     const navItems = document.querySelectorAll('.nav-item');
@@ -70,7 +67,6 @@ function switchPage(pageId) {
     }
 }
 
-// Keamanan Login Admin
 function verifyAdminPassword() {
     const pass = document.getElementById('adminPasswordInput').value;
     if (pass === ADMIN_SECRET_PASSWORD) {
@@ -101,7 +97,6 @@ function logoutAdmin() {
     checkAdminSession();
 }
 
-// Render Dashboard Admin (Pesanan & Hapus Ulasan)
 function renderAdminDashboard() {
     renderAdminOrders();
     renderAdminReviews();
@@ -126,7 +121,7 @@ function renderAdminOrders() {
             <td style="padding:10px;">${ord.name}<br><small>${ord.phone}</small></td>
             <td style="padding:10px;">${ord.items}</td>
             <td style="padding:10px;">${formatRupiah(ord.total)}</td>
-            <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#d4edda':ord.status==='Dibatalkan'?'#f8d7da':'#fff3cd'};">${ord.status}</span></td>
+            <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#28a745':ord.status==='Dibatalkan'?'#dc3545':'#ffc107'}; color:#fff;">${ord.status}</span></td>
             <td style="padding:10px;">
                 <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Setuju</button>
                 <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Selesai</button>
@@ -144,7 +139,6 @@ function updateOrderStatus(index, status) {
     renderAdminOrders();
 }
 
-// Fitur Hapus Ulasan dari Admin
 function renderAdminReviews() {
     const tbody = document.getElementById('adminReviewList');
     if (!tbody) return;
@@ -178,7 +172,6 @@ function deleteReview(index) {
     alert('Ulasan berhasil dihapus.');
 }
 
-// Render Slider Testimoni
 function renderReviews() {
     const slider = document.getElementById('testimonialSlider');
     const dotsContainer = document.getElementById('sliderDots');
@@ -260,7 +253,6 @@ function updateStarUI(rating) {
     });
 }
 
-// Render Menu
 function renderMenu(filter = 'all') {
     const menuGrid = document.getElementById('menuGrid');
     if (!menuGrid) return;
@@ -288,7 +280,6 @@ function renderMenu(filter = 'all') {
     });
 }
 
-// Voucher Logic
 function applyVoucher() {
     const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
     const msg = document.getElementById('voucherMessage');
@@ -348,7 +339,6 @@ function updateCartUI() {
     cartTotalAmount.textContent = formatRupiah(totalSum);
 }
 
-// Cek Jam Operasional Toko Otomatis
 function checkStoreStatus() {
     const badge = document.getElementById('storeStatusBadge');
     if (!badge) return;
@@ -362,13 +352,11 @@ function checkStoreStatus() {
     }
 }
 
-// Inisialisasi Event Utama
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
     renderReviews();
     checkStoreStatus();
 
-    // Dark Mode Toggle Logic
     const themeBtn = document.getElementById('themeToggleBtn');
     const currentTheme = localStorage.getItem('theme');
     if (currentTheme === 'dark') {
@@ -388,7 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', theme);
     });
 
-    // Scroll to Top Button Logic
     const scrollBtn = document.getElementById('scrollToTopBtn');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 300) scrollBtn.classList.add('show');
