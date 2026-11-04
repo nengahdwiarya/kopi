@@ -187,3 +187,64 @@ body.dark-mode .footer { background: #080808 !important; border-top: 1px solid #
     .mobile-toggle { display: block; }
     .app-card-box, .contact-grid, .grid-2 { grid-template-columns: 1fr; }
 }
+:root {
+    --primary-color: #006837; 
+    --primary-hover: #004d28;
+    --dark-color: #1e1e1e;
+    --light-color: #f9f9f6;
+    --accent-color: #d4a373;
+    --gray-bg: #f4f4f0;
+    --text-color: #2c2c2c;
+    --text-muted: #666666;
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+/* Dark Mode Theme Variables */
+body.dark-mode {
+    --primary-color: #00a859;
+    --primary-hover: #008043;
+    --dark-color: #f0f0f0;
+    --light-color: #121212;
+    --gray-bg: #161616;
+    --text-color: #e0e0e0;
+    --text-muted: #aaa299;
+    --bg-color: #0e0e0e;
+    --card-bg: #181818;
+}
+
+html, body {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    min-height: 100%;
+}
+
+/* Aksen Background ala WhatsApp */
+body {
+    background-image: radial-gradient(rgba(0, 104, 55, 0.05) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+}
+
+body.dark-mode {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+}
+
+body.dark-mode .header { background: #181818 !important; color: #fff; box-shadow: 0 2px 10px rgba(255,255,255,0.05); }
+body.dark-mode .nav-links a { color: #ddd; }
+body.dark-mode .menu-card, 
+body.dark-mode .content-box, 
+body.dark-mode .app-card-box, 
+body.dark-mode .store-card, 
+body.dark-mode .rating-box-form, 
+body.dark-mode .modal-content, 
+body.dark-mode .contact-form, 
+body.dark-mode table,
+body.dark-mode .app-section { 
+    background-color: var(--card-bg) !important; 
+    color: var(--text-color) !important; 
+    border-color: #2a2a2a; 
+}
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select { background-color: #222; color: #fff; border-color: #333; }
