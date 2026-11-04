@@ -29,6 +29,7 @@ let selectedStar = 0;
 let discountPercent = 0;
 const ADMIN_SECRET_PASSWORD = "nengahsenja2026";
 
+// Inisialisasi LocalStorage jika kosong
 if (!localStorage.getItem('reviews')) {
     localStorage.setItem('reviews', JSON.stringify([
         { name: "Devi Alfilovita", text: "Kopi Senja Bojongsari is one of the best merchants! Pelayanan cepat.", stars: 5 },
@@ -44,6 +45,7 @@ function formatRupiah(amount) {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 }
 
+// Navigasi Pindah Halaman
 function switchPage(pageId) {
     const pages = document.querySelectorAll('.page-content');
     const navItems = document.querySelectorAll('.nav-item');
@@ -67,9 +69,11 @@ function switchPage(pageId) {
     }
 }
 
+// Keamanan Login Admin
 function verifyAdminPassword() {
-    const pass = document.getElementById('adminPasswordInput').value;
-    if (pass === ADMIN_SECRET_PASSWORD) {
+    const passInput = document.getElementById('adminPasswordInput');
+    if (!passInput) return;
+    if (passInput.value === ADMIN_SECRET_PASSWORD) {
         localStorage.setItem('isAdminLoggedIn', 'true');
         document.getElementById('adminLoginBox').style.display = 'none';
         document.getElementById('adminDashboardContent').style.display = 'block';
@@ -81,19 +85,24 @@ function verifyAdminPassword() {
 
 function checkAdminSession() {
     const isLogged = localStorage.getItem('isAdminLoggedIn');
+    const loginBox = document.getElementById('adminLoginBox');
+    const dashboardContent = document.getElementById('adminDashboardContent');
+    if (!loginBox || !dashboardContent) return;
+
     if (isLogged === 'true') {
-        document.getElementById('adminLoginBox').style.display = 'none';
-        document.getElementById('adminDashboardContent').style.display = 'block';
+        loginBox.style.display = 'none';
+        dashboardContent.style.display = 'block';
         renderAdminDashboard();
     } else {
-        document.getElementById('adminLoginBox').style.display = 'block';
-        document.getElementById('adminDashboardContent').style.display = 'none';
+        loginBox.style.display = 'block';
+        dashboardContent.style.display = 'none';
     }
 }
 
 function logoutAdmin() {
     localStorage.removeItem('isAdminLoggedIn');
-    document.getElementById('adminPasswordInput').value = '';
+    const passInput = document.getElementById('adminPasswordInput');
+    if (passInput) passInput.value = '';
     checkAdminSession();
 }
 
@@ -123,8 +132,8 @@ function renderAdminOrders() {
             <td style="padding:10px;">${formatRupiah(ord.total)}</td>
             <td style="padding:10px;"><span style="padding:3px 8px; border-radius:4px; font-size:0.8rem; background:${ord.status==='Disetujui'?'#28a745':ord.status==='Dibatalkan'?'#dc3545':'#ffc107'}; color:#fff;">${ord.status}</span></td>
             <td style="padding:10px;">
-                <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Setuju</button>
-                <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Selesai</button>
+                <button onclick="updateOrderStatus(${idx}, 'Disetujui')" style="background:#28a745; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; margin-right:4px;">Setuju</button>
+                <button onclick="updateOrderStatus(${idx}, 'Selesai')" style="background:#17a2b8; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; margin-right:4px;">Selesai</button>
                 <button onclick="updateOrderStatus(${idx}, 'Dibatalkan')" style="background:#dc3545; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Batal</button>
             </td>
         `;
@@ -172,17 +181,23 @@ function deleteReview(index) {
     alert('Ulasan berhasil dihapus.');
 }
 
+// Render Slider Testimoni
 function renderReviews() {
     const slider = document.getElementById('testimonialSlider');
     const dotsContainer = document.getElementById('sliderDots');
     const totalCountEl = document.getElementById('totalReviewsCount');
     if (!slider) return;
 
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
     if (totalCountEl) totalCountEl.textContent = reviews.length;
 
     slider.innerHTML = '';
     dotsContainer.innerHTML = '';
+
+    if (reviews.length === 0) {
+        slider.innerHTML = `<p style="text-align:center; padding:20px;">Belum ada ulasan. Jadilah yang pertama memberi ulasan!</p>`;
+        return;
+    }
 
     reviews.forEach((rev, index) => {
         const starHTML = '<i class="fa-solid fa-star" style="color:#ffc107;"></i>'.repeat(rev.stars);
@@ -219,22 +234,29 @@ function showSlide(index) {
     dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
 }
 
-function goToSlide(index) { currentSlide = index; showSlide(currentSlide); }
+function goToSlide(index) { 
+    currentSlide = index; 
+    showSlide(currentSlide); 
+}
 
 function submitReview() {
-    const name = document.getElementById('reviewerName').value.trim();
-    const text = document.getElementById('userReviewText').value.trim();
+    const nameInput = document.getElementById('reviewerName');
+    const textInput = document.getElementById('userReviewText');
+    if (!nameInput || !textInput) return;
+
+    const name = nameInput.value.trim();
+    const text = textInput.value.trim();
 
     if (selectedStar === 0) return alert('Silakan pilih rating bintang terlebih dahulu!');
     if (!name || !text) return alert('Silakan isi nama dan ulasan Anda!');
 
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
+    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
     reviews.push({ name, text, stars: selectedStar });
     localStorage.setItem('reviews', JSON.stringify(reviews));
 
     alert('Terima kasih! Ulasan Anda berhasil ditambahkan.');
-    document.getElementById('reviewerName').value = '';
-    document.getElementById('userReviewText').value = '';
+    nameInput.value = '';
+    textInput.value = '';
     selectedStar = 0;
     updateStarUI(0);
     currentSlide = reviews.length - 1;
@@ -246,13 +268,16 @@ function updateStarUI(rating) {
     const stars = document.querySelectorAll('#starRating i');
     stars.forEach((star, index) => {
         if (index < rating) {
-            star.classList.remove('fa-regular'); star.classList.add('fa-solid');
+            star.classList.remove('fa-regular'); 
+            star.classList.add('fa-solid');
         } else {
-            star.classList.remove('fa-solid'); star.classList.add('fa-regular');
+            star.classList.remove('fa-solid'); 
+            star.classList.add('fa-regular');
         }
     });
 }
 
+// Render Menu 22 Item
 function renderMenu(filter = 'all') {
     const menuGrid = document.getElementById('menuGrid');
     if (!menuGrid) return;
@@ -280,11 +305,15 @@ function renderMenu(filter = 'all') {
     });
 }
 
+// Voucher Logic
 function applyVoucher() {
-    const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
+    const voucherInput = document.getElementById('voucherCodeInput');
     const msg = document.getElementById('voucherMessage');
+    if (!voucherInput || !msg) return;
 
-    if (code === 'KOPIZENJA' || code === 'BOJONGSARI ||  code === 'KOIPLM'|| code === 'KOPIPINGGIR') {
+    const code = voucherInput.value.trim().toUpperCase();
+
+    if (code === 'KOPIZENJA' || code === 'BOJONGSARI') {
         discountPercent = 15;
         msg.textContent = 'Voucher Berhasil! Diskon 15%';
     } else if (code === 'SENJADAMAI') {
@@ -302,6 +331,7 @@ function applyVoucher() {
 
 function addToCart(id) {
     const product = menuItems.find(p => p.id === id);
+    if (!product) return;
     const exist = cart.find(c => c.id === id);
     if (exist) exist.qty += 1;
     else cart.push({ ...product, qty: 1 });
@@ -313,7 +343,7 @@ function updateCartUI() {
     const cartBadge = document.getElementById('cartBadge');
     const cartItemsContainer = document.getElementById('cartItems');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
-    if (!cartBadge) return;
+    if (!cartBadge || !cartItemsContainer || !cartTotalAmount) return;
 
     const totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
     cartBadge.textContent = totalQty;
@@ -339,12 +369,13 @@ function updateCartUI() {
     cartTotalAmount.textContent = formatRupiah(totalSum);
 }
 
+// Cek Jam Operasional Toko Otomatis
 function checkStoreStatus() {
     const badge = document.getElementById('storeStatusBadge');
     if (!badge) return;
     const currentHour = new Date().getHours();
-    if (currentHour >= 8 && currentHour < 23) {
-        badge.textContent = "Buka (08:00 - 23:00)";
+    if (currentHour >= 9 && currentHour < 22) {
+        badge.textContent = "Buka (09:00 - 22:00)";
         badge.style.background = "#28a745";
     } else {
         badge.textContent = "Tutup";
@@ -352,16 +383,18 @@ function checkStoreStatus() {
     }
 }
 
+// Inisialisasi Event Utama saat halaman selesai dimuat
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
     renderReviews();
     checkStoreStatus();
 
+    // Dark Mode Toggle Logic
     const themeBtn = document.getElementById('themeToggleBtn');
     const currentTheme = localStorage.getItem('theme');
     if (currentTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
     }
 
     themeBtn?.addEventListener('click', () => {
@@ -376,20 +409,24 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', theme);
     });
 
+    // Scroll to Top Button Logic
     const scrollBtn = document.getElementById('scrollToTopBtn');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) scrollBtn.classList.add('show');
-        else scrollBtn.classList.remove('show');
+        if (window.scrollY > 300) scrollBtn?.classList.add('show');
+        else scrollBtn?.classList.remove('show');
     });
     scrollBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+    // Navigasi Halaman
     document.querySelectorAll('[data-page]').forEach(el => {
         el.addEventListener('click', (e) => {
             e.preventDefault();
-            switchPage(el.getAttribute('data-page'));
+            const pageId = el.getAttribute('data-page');
+            switchPage(pageId);
         });
     });
 
+    // Filter Menu
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -398,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Rating Bintang Form Ulasan
     document.querySelectorAll('#starRating i').forEach(star => {
         star.addEventListener('click', function() {
             selectedStar = parseInt(this.getAttribute('data-value'));
@@ -405,23 +443,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Tombol Navigasi Slider Testimoni
     document.getElementById('prevSlide')?.addEventListener('click', () => showSlide(currentSlide - 1));
     document.getElementById('nextSlide')?.addEventListener('click', () => showSlide(currentSlide + 1));
 
+    // Modal Keranjang
     const cartModal = document.getElementById('cartModal');
-    document.getElementById('cartBtn')?.addEventListener('click', () => cartModal.classList.add('active'));
-    document.getElementById('closeCart')?.addEventListener('click', () => cartModal.classList.remove('active'));
+    document.getElementById('cartBtn')?.addEventListener('click', () => cartModal?.classList.add('active'));
+    document.getElementById('closeCart')?.addEventListener('click', () => cartModal?.classList.remove('active'));
 
+    // Mobile Hamburger Menu Toggle
     document.getElementById('menuToggle')?.addEventListener('click', () => {
         document.getElementById('navLinks')?.classList.toggle('active');
     });
 
+    // Form Komplain
     document.getElementById('complaintForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         alert('Komplain/Pesan Anda telah dikirim ke email sekolahmail588@gmail.com dan WhatsApp 0881025467022.');
         e.target.reset();
     });
 
+    // Tombol Checkout WhatsApp
     document.getElementById('checkoutWaBtn')?.addEventListener('click', () => {
         if (cart.length === 0) return alert('Keranjang masih kosong!');
         const name = document.getElementById('buyerName').value.trim();
@@ -453,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cart = [];
         discountPercent = 0;
         updateCartUI();
-        cartModal.classList.remove('active');
+        cartModal?.classList.remove('active');
 
         window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
     });
