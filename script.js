@@ -284,7 +284,7 @@ function applyVoucher() {
     const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
     const msg = document.getElementById('voucherMessage');
 
-    if (code === 'KOPIZENJA' || code === 'BOJONGSARI') {
+    if (code === 'KOPIZENJA' || code === 'BOJONGSARI'code === 'kopipml' code === 'kopipinggir') {
         discountPercent = 15;
         msg.textContent = 'Voucher Berhasil! Diskon 15%';
     } else if (code === 'SENJADAMAI') {
